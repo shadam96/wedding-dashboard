@@ -38,7 +38,7 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-6">
+              <DialogPanel className="w-full max-w-lg max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-xl p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <DialogTitle className="text-lg font-bold text-warm-900">
                     {title}

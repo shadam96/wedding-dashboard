@@ -78,7 +78,7 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemP
         </span>
       )}
 
-      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+      <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition">
         <button
           onClick={() => onEdit(task)}
           className="p-1 text-warm-400 hover:text-rose-500 rounded-lg hover:bg-rose-50 transition"

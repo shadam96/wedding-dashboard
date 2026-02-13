@@ -79,7 +79,7 @@ export default function GuestTable({ guests, onEdit, onDelete }: GuestTableProps
                       />
                     </button>
                     {!groupCollapsed && (
-                      <table className="w-full">
+                      <table className="w-full min-w-[600px]">
                         <tbody>
                           {groupGuests.map((guest) => (
                             <GuestRow
