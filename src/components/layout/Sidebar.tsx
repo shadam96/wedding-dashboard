@@ -12,6 +12,8 @@ import {
   HeartIcon,
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
+import { SunIcon, MoonIcon } from '@heroicons/react/24/outline'
+import { useTheme } from '@/components/ThemeProvider'
 
 const navItems = [
   { href: '/', label: 'דשבורד', icon: HomeIcon },
@@ -23,6 +25,7 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { theme, toggle } = useTheme()
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
@@ -31,7 +34,7 @@ export default function Sidebar() {
 
   const navContent = (
     <>
-      <div className="flex items-center gap-3 px-4 py-6 border-b border-rose-700/30">
+      <div className="flex items-center gap-3 px-4 py-6 border-b border-rose-700/30 dark:border-rose-900/40">
         <div className="w-10 h-10 rounded-full bg-rose-400/20 flex items-center justify-center">
           <HeartIcon className="w-5 h-5 text-rose-200" />
         </div>
@@ -62,30 +65,50 @@ export default function Sidebar() {
           )
         })}
       </nav>
+
+      <div className="px-3 pb-4">
+        <button
+          onClick={toggle}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-rose-200 hover:bg-rose-400/10 hover:text-white transition-colors w-full"
+        >
+          {theme === 'dark' ? (
+            <SunIcon className="w-5 h-5 shrink-0" />
+          ) : (
+            <MoonIcon className="w-5 h-5 shrink-0" />
+          )}
+          {theme === 'dark' ? 'מצב בהיר' : 'מצב כהה'}
+        </button>
+      </div>
     </>
   )
 
   return (
     <>
       {/* Mobile header */}
-      <div className="lg:hidden fixed top-0 inset-x-0 z-40 bg-rose-800 h-14 flex items-center px-4 shadow-md">
+      <div className="lg:hidden fixed top-0 inset-x-0 z-40 bg-rose-800 dark:bg-rose-900 h-14 flex items-center px-4 shadow-md">
         <button
           onClick={() => setMobileOpen(true)}
-          className="text-white p-1.5 hover:bg-rose-700 rounded-lg transition"
+          className="text-white p-1.5 hover:bg-rose-700 dark:hover:bg-rose-800 rounded-lg transition"
         >
           <Bars3Icon className="w-6 h-6" />
         </button>
         <span className="font-bold text-white me-3">החתונה שלנו</span>
+        <button
+          onClick={toggle}
+          className="text-rose-200 hover:text-white p-1.5 me-auto"
+        >
+          {theme === 'dark' ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
+        </button>
       </div>
 
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-50 bg-black/40"
+          className="lg:hidden fixed inset-0 z-50 bg-black/40 dark:bg-black/60"
           onClick={() => setMobileOpen(false)}
         >
           <div
-            className="absolute inset-y-0 right-0 w-64 bg-rose-800 shadow-xl flex flex-col"
+            className="absolute inset-y-0 right-0 w-64 bg-rose-800 dark:bg-rose-900 shadow-xl flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -100,7 +123,7 @@ export default function Sidebar() {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-60 lg:fixed lg:inset-y-0 lg:right-0 bg-rose-800 shadow-xl z-30">
+      <aside className="hidden lg:flex lg:flex-col lg:w-60 lg:fixed lg:inset-y-0 lg:right-0 bg-rose-800 dark:bg-rose-900 shadow-xl z-30">
         {navContent}
       </aside>
     </>

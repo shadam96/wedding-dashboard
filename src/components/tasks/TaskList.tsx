@@ -26,10 +26,10 @@ export default function TaskList({ tasks, onToggle, onEdit, onDelete }: TaskList
         const statusTasks = tasks.filter((t) => t.status === status)
 
         return (
-          <div key={status} className="bg-white rounded-xl border border-warm-100 overflow-hidden">
-            <div className="px-4 py-3 bg-warm-50 border-b border-warm-100 flex items-center gap-2">
+          <div key={status} className="bg-white dark:bg-warm-800 rounded-xl border border-warm-100 dark:border-warm-700 overflow-hidden">
+            <div className="px-4 py-3 bg-warm-50 dark:bg-warm-800 border-b border-warm-100 dark:border-warm-700 flex items-center gap-2">
               <span>{statusIcons[status]}</span>
-              <h3 className="font-bold text-warm-800 text-sm">
+              <h3 className="font-bold text-warm-800 dark:text-warm-200 text-sm">
                 {STATUS_LABELS[status]} ({statusTasks.length})
               </h3>
             </div>

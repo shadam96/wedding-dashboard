@@ -123,9 +123,9 @@ export default function GuestFormModal({ open, onClose, onSubmit, guest }: Guest
               type="checkbox"
               checked={form.has_plus_one}
               onChange={(e) => setForm({ ...form, has_plus_one: e.target.checked })}
-              className="w-4 h-4 rounded border-warm-300 text-rose-500 focus:ring-rose-300"
+              className="w-4 h-4 rounded border-warm-300 dark:border-warm-600 text-rose-500 focus:ring-rose-300 dark:focus:ring-rose-500 dark:bg-warm-700"
             />
-            <span className="text-sm text-warm-700">מגיע/ה עם פלוס אחד</span>
+            <span className="text-sm text-warm-700 dark:text-warm-300">מגיע/ה עם פלוס אחד</span>
           </label>
         </div>
 
@@ -148,7 +148,7 @@ export default function GuestFormModal({ open, onClose, onSubmit, guest }: Guest
         />
 
         <div>
-          <label htmlFor="guest-notes" className="block text-sm font-medium text-warm-700 mb-1">
+          <label htmlFor="guest-notes" className="block text-sm font-medium text-warm-700 dark:text-warm-300 mb-1">
             הערות
           </label>
           <textarea
@@ -156,7 +156,7 @@ export default function GuestFormModal({ open, onClose, onSubmit, guest }: Guest
             value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
             rows={2}
-            className="w-full px-3 py-2 rounded-xl border border-warm-200 bg-white text-warm-900 placeholder:text-warm-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-300 transition resize-none"
+            className="w-full px-3 py-2 rounded-xl border border-warm-200 dark:border-warm-600 bg-white dark:bg-warm-700 text-warm-900 dark:text-warm-100 placeholder:text-warm-400 focus:outline-none focus:ring-2 focus:ring-rose-300 dark:focus:ring-rose-500 focus:border-rose-300 dark:focus:border-rose-500 transition resize-none"
           />
         </div>
 

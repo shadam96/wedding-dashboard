@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-rose-50: #fff1f3;
   --color-rose-100: #ffe0e5;
@@ -38,4 +40,10 @@
 body {
   background-color: var(--color-warm-50);
   color: var(--color-warm-900);
+}
+
+.dark body,
+body:where(.dark *) {
+  background-color: #1a1614;
+  color: #e8dfd8;
 }

@@ -28,15 +28,15 @@ export default function GuestStats({ guests }: GuestStatsProps) {
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="bg-white rounded-xl border border-warm-100 p-3 text-center"
+          className="bg-white dark:bg-warm-800 rounded-xl border border-warm-100 dark:border-warm-700 p-3 text-center"
         >
           <div className="flex items-center justify-center gap-1.5 mb-1">
             {stat.dotColor && (
               <span className={`w-2 h-2 rounded-full ${stat.dotColor}`} />
             )}
-            <span className="text-xs text-warm-500">{stat.label}</span>
+            <span className="text-xs text-warm-500 dark:text-warm-400">{stat.label}</span>
           </div>
-          <p className="text-xl font-bold text-warm-900">{stat.value}</p>
+          <p className="text-xl font-bold text-warm-900 dark:text-warm-100">{stat.value}</p>
           {stat.sub && <p className="text-xs text-warm-400">{stat.sub}</p>}
         </div>
       ))}

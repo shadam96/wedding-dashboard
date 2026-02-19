@@ -24,7 +24,7 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <Modal open={open} onClose={onClose} title={title}>
-      <p className="text-warm-600 mb-6">{message}</p>
+      <p className="text-warm-600 dark:text-warm-300 mb-6">{message}</p>
       <div className="flex gap-3 justify-end">
         <Button variant="secondary" onClick={onClose}>
           ביטול

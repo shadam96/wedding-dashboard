@@ -45,12 +45,12 @@ export default function GuestTable({ guests, onEdit, onDelete }: GuestTableProps
         const sideCollapsed = collapsedSides.has(side)
 
         return (
-          <div key={side} className="bg-white rounded-xl border border-warm-100 overflow-hidden overflow-x-auto">
+          <div key={side} className="bg-white dark:bg-warm-800 rounded-xl border border-warm-100 dark:border-warm-700 overflow-hidden overflow-x-auto">
             <button
               onClick={() => toggleSide(side)}
-              className="w-full px-4 py-3 bg-warm-50 border-b border-warm-100 flex items-center justify-between hover:bg-warm-100/60 transition cursor-pointer"
+              className="w-full px-4 py-3 bg-warm-50 dark:bg-warm-800 border-b border-warm-100 dark:border-warm-700 flex items-center justify-between hover:bg-warm-100/60 dark:hover:bg-warm-700/60 transition cursor-pointer"
             >
-              <h3 className="font-bold text-warm-800">
+              <h3 className="font-bold text-warm-800 dark:text-warm-200">
                 {SIDE_LABELS[side]} ({sideGuests.length})
               </h3>
               <ChevronDownIcon
@@ -69,13 +69,13 @@ export default function GuestTable({ guests, onEdit, onDelete }: GuestTableProps
                   <div key={subgroup}>
                     <button
                       onClick={() => toggleGroup(groupKey)}
-                      className="w-full px-4 py-2 bg-warm-50/50 border-b border-warm-100 flex items-center justify-between hover:bg-warm-100/40 transition cursor-pointer"
+                      className="w-full px-4 py-2 bg-warm-50/50 dark:bg-warm-700/30 border-b border-warm-100 dark:border-warm-700 flex items-center justify-between hover:bg-warm-100/40 dark:hover:bg-warm-700/50 transition cursor-pointer"
                     >
-                      <span className="text-xs font-medium text-warm-500">
+                      <span className="text-xs font-medium text-warm-500 dark:text-warm-400">
                         {SUBGROUP_LABELS[subgroup]} ({groupGuests.length})
                       </span>
                       <ChevronDownIcon
-                        className={`w-3.5 h-3.5 text-warm-300 transition-transform ${groupCollapsed ? '-rotate-90' : ''}`}
+                        className={`w-3.5 h-3.5 text-warm-300 dark:text-warm-500 transition-transform ${groupCollapsed ? '-rotate-90' : ''}`}
                       />
                     </button>
                     {!groupCollapsed && (

@@ -13,15 +13,15 @@ interface TaskItemProps {
 }
 
 const priorityColors = {
-  low: 'bg-blue-100 text-blue-700',
-  medium: 'bg-amber-100 text-amber-700',
-  high: 'bg-red-100 text-red-700',
+  low: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  medium: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  high: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 }
 
 const ownerColors: Record<TaskOwner, string> = {
-  suson: 'bg-sky-100 text-sky-700',
-  susonit: 'bg-pink-100 text-pink-700',
-  both: 'bg-purple-100 text-purple-700',
+  suson: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
+  susonit: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
+  both: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
 }
 
 function nextStatus(status: TaskStatus): TaskStatus {
@@ -34,15 +34,15 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemP
   const isDone = task.status === 'done'
 
   return (
-    <div className="flex items-center gap-3 py-3 px-4 border-b border-warm-100 last:border-0 hover:bg-warm-50/50 transition group">
+    <div className="flex items-center gap-3 py-3 px-4 border-b border-warm-100 dark:border-warm-700 last:border-0 hover:bg-warm-50/50 dark:hover:bg-warm-700/30 transition group">
       <button
         onClick={() => onToggle({ ...task, status: nextStatus(task.status) })}
         className={`w-5 h-5 rounded-md border-2 shrink-0 flex items-center justify-center transition ${
           isDone
             ? 'bg-rose-500 border-rose-500 text-white'
             : task.status === 'in_progress'
-            ? 'border-rose-300 bg-rose-50'
-            : 'border-warm-300'
+            ? 'border-rose-300 bg-rose-50 dark:border-rose-500 dark:bg-rose-900/30'
+            : 'border-warm-300 dark:border-warm-500'
         }`}
       >
         {isDone && (
@@ -56,7 +56,7 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemP
       </button>
 
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium ${isDone ? 'line-through text-warm-400' : 'text-warm-900'}`}>
+        <p className={`text-sm font-medium ${isDone ? 'line-through text-warm-400' : 'text-warm-900 dark:text-warm-100'}`}>
           {task.title}
         </p>
         {task.description && (
@@ -81,13 +81,13 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemP
       <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition">
         <button
           onClick={() => onEdit(task)}
-          className="p-1 text-warm-400 hover:text-rose-500 rounded-lg hover:bg-rose-50 transition"
+          className="p-1 text-warm-400 hover:text-rose-500 dark:hover:text-rose-400 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-900/20 transition"
         >
           <PencilIcon className="w-4 h-4" />
         </button>
         <button
           onClick={() => onDelete(task)}
-          className="p-1 text-warm-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition"
+          className="p-1 text-warm-400 hover:text-red-500 dark:hover:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition"
         >
           <TrashIcon className="w-4 h-4" />
         </button>

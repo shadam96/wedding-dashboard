@@ -94,7 +94,7 @@ export default function GuestsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="חיפוש לפי שם, טלפון או הערה..."
-              className="w-full ps-4 pe-10 py-2.5 rounded-xl border border-warm-200 bg-white text-warm-900 placeholder:text-warm-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-300 transition text-sm"
+              className="w-full ps-4 pe-10 py-2.5 rounded-xl border border-warm-200 dark:border-warm-600 bg-white dark:bg-warm-800 text-warm-900 dark:text-warm-100 placeholder:text-warm-400 focus:outline-none focus:ring-2 focus:ring-rose-300 dark:focus:ring-rose-500 focus:border-rose-300 dark:focus:border-rose-500 transition text-sm"
             />
             {search && (
               <button
