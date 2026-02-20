@@ -35,7 +35,9 @@ export default function DashboardPage() {
     )
   }
 
-  const totalGuests = guests.length + guests.filter((g) => g.has_plus_one).length
+  const plusOnes = guests.filter((g) => g.has_plus_one).length
+  const childrenCount = guests.reduce((s, g) => s + (g.children || []).length, 0)
+  const totalGuests = guests.length + plusOnes + childrenCount
   const totalBudget = budgetItems.reduce((s, i) => s + Number(i.total_amount), 0)
   const openTasks = tasks.filter((t) => t.status !== 'done').length
   const days = daysUntilWedding()
@@ -48,7 +50,7 @@ export default function DashboardPage() {
         <SummaryCard
           title="סה״כ מוזמנים"
           value={totalGuests}
-          subtitle={`${guests.length} מוזמנים + פלוסים`}
+          subtitle={`${guests.length} מוזמנים + ${plusOnes} פלוסים${childrenCount > 0 ? ` + ${childrenCount} ילדים` : ''}`}
           icon={<UserGroupIcon className="w-5 h-5" />}
           color="rose"
         />

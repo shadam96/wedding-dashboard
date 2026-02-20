@@ -6,10 +6,12 @@ CREATE TABLE IF NOT EXISTS guests (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name text NOT NULL,
   side text NOT NULL CHECK (side IN ('suson', 'susonit')),
-  subgroup text NOT NULL CHECK (subgroup IN ('family', 'friends', 'work', 'army', 'school', 'other')),
+  subgroup text NOT NULL,
   likelihood text NOT NULL DEFAULT 'green' CHECK (likelihood IN ('red', 'yellow', 'green')),
   has_plus_one boolean DEFAULT false,
   plus_one_name text,
+  plus_one_likelihood text DEFAULT 'green' CHECK (plus_one_likelihood IN ('red', 'yellow', 'green')),
+  children jsonb DEFAULT '[]'::jsonb,
   phone text,
   notes text,
   created_at timestamptz DEFAULT now()
@@ -22,6 +24,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   description text,
   status text NOT NULL DEFAULT 'todo' CHECK (status IN ('todo', 'in_progress', 'done')),
   priority text NOT NULL DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high')),
+  owner text NOT NULL DEFAULT 'both' CHECK (owner IN ('suson', 'susonit', 'both')),
   due_date date,
   created_at timestamptz DEFAULT now()
 );

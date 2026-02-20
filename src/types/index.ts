@@ -1,6 +1,15 @@
 export type GuestSide = 'suson' | 'susonit'
-export type GuestSubgroup = 'family' | 'friends' | 'work' | 'army' | 'school' | 'other'
+export type DefaultGuestSubgroup = 'family' | 'friends' | 'work' | 'army' | 'school' | 'other'
+export type GuestSubgroup = DefaultGuestSubgroup | (string & {})
 export type Likelihood = 'red' | 'yellow' | 'green'
+
+export const DEFAULT_SUBGROUPS: DefaultGuestSubgroup[] = ['family', 'friends', 'work', 'army', 'school', 'other']
+
+export interface GuestChild {
+  name: string
+  under_10: boolean
+  likelihood: Likelihood
+}
 
 export interface Guest {
   id: string
@@ -10,6 +19,8 @@ export interface Guest {
   likelihood: Likelihood
   has_plus_one: boolean
   plus_one_name: string | null
+  plus_one_likelihood: Likelihood | null
+  children: GuestChild[]
   phone: string | null
   notes: string | null
   created_at: string
@@ -46,13 +57,17 @@ export const SIDE_LABELS: Record<GuestSide, string> = {
   susonit: 'סוסונית',
 }
 
-export const SUBGROUP_LABELS: Record<GuestSubgroup, string> = {
+export const SUBGROUP_LABELS: Record<string, string> = {
   family: 'משפחה',
   friends: 'חברים',
   work: 'עבודה',
   army: 'צבא',
   school: 'לימודים',
   other: 'אחר',
+}
+
+export function getSubgroupLabel(subgroup: string): string {
+  return SUBGROUP_LABELS[subgroup] || subgroup
 }
 
 export const LIKELIHOOD_LABELS: Record<Likelihood, string> = {

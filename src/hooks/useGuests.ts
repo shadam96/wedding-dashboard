@@ -20,7 +20,7 @@ export function useGuests() {
     if (err) {
       setError(err.message)
     } else {
-      setGuests(data || [])
+      setGuests((data || []).map((g) => ({ ...g, children: g.children || [] })))
     }
     setLoading(false)
   }, [])

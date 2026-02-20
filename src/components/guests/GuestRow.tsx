@@ -1,21 +1,28 @@
 'use client'
 
-import type { Guest } from '@/types'
-import { SUBGROUP_LABELS } from '@/types'
+import type { Guest, Likelihood } from '@/types'
+import { getSubgroupLabel } from '@/types'
 import StatusDot from '@/components/ui/StatusDot'
+import LikelihoodPicker from './LikelihoodPicker'
 import { PencilIcon, TrashIcon, UserPlusIcon } from '@heroicons/react/24/outline'
 
 interface GuestRowProps {
   guest: Guest
   onEdit: (guest: Guest) => void
   onDelete: (guest: Guest) => void
+  onUpdateLikelihood: (guestId: string, likelihood: Likelihood) => void
 }
 
-export default function GuestRow({ guest, onEdit, onDelete }: GuestRowProps) {
+export default function GuestRow({ guest, onEdit, onDelete, onUpdateLikelihood }: GuestRowProps) {
+  const children = guest.children || []
+
   return (
     <tr className="border-b border-warm-100 dark:border-warm-700 hover:bg-warm-50/50 dark:hover:bg-warm-700/30 transition">
       <td className="py-3 ps-4 pe-2">
-        <StatusDot likelihood={guest.likelihood} />
+        <LikelihoodPicker
+          current={guest.likelihood}
+          onChange={(v) => onUpdateLikelihood(guest.id, v)}
+        />
       </td>
       <td className="py-3 px-2">
         <div className="font-medium text-warm-900 dark:text-warm-100">{guest.name}</div>
@@ -25,7 +32,7 @@ export default function GuestRow({ guest, onEdit, onDelete }: GuestRowProps) {
       </td>
       <td className="py-3 px-2">
         <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-warm-100 dark:bg-warm-700 text-warm-600 dark:text-warm-300">
-          {SUBGROUP_LABELS[guest.subgroup]}
+          {getSubgroupLabel(guest.subgroup)}
         </span>
       </td>
       <td className="py-3 px-2">
@@ -33,7 +40,23 @@ export default function GuestRow({ guest, onEdit, onDelete }: GuestRowProps) {
           <span className="inline-flex items-center gap-1 text-xs text-gold-600 dark:text-gold-400">
             <UserPlusIcon className="w-3.5 h-3.5" />
             {guest.plus_one_name || '+1'}
+            {guest.plus_one_likelihood && (
+              <StatusDot likelihood={guest.plus_one_likelihood} />
+            )}
           </span>
+        )}
+        {children.length > 0 && (
+          <div className="mt-0.5">
+            <span
+              className="inline-flex items-center gap-1 text-xs text-warm-500 dark:text-warm-400"
+              title={children.map((c) => `${c.name}${c.under_10 ? ' (מתחת ל-10)' : ''}`).join(', ')}
+            >
+              {children.length} ילדים
+              {children.map((c, i) => (
+                <StatusDot key={i} likelihood={c.likelihood} />
+              ))}
+            </span>
+          </div>
         )}
       </td>
       <td className="py-3 px-2 text-xs text-warm-400 max-w-[150px] truncate hidden sm:table-cell">

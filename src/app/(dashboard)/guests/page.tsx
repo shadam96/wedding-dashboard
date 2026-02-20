@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { PlusIcon, UserGroupIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useGuests } from '@/hooks/useGuests'
-import type { Guest } from '@/types'
+import type { Guest, Likelihood } from '@/types'
 import PageHeader from '@/components/layout/PageHeader'
 import Button from '@/components/ui/Button'
 import EmptyState from '@/components/ui/EmptyState'
@@ -20,6 +20,12 @@ export default function GuestsPage() {
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [search, setSearch] = useState('')
 
+  const existingSubgroups = useMemo(() => {
+    const set = new Set<string>()
+    for (const g of guests) set.add(g.subgroup)
+    return [...set]
+  }, [guests])
+
   const filteredGuests = useMemo(() => {
     if (!search.trim()) return guests
     const q = search.trim().toLowerCase()
@@ -28,7 +34,8 @@ export default function GuestsPage() {
         g.name.toLowerCase().includes(q) ||
         (g.plus_one_name && g.plus_one_name.toLowerCase().includes(q)) ||
         (g.phone && g.phone.includes(q)) ||
-        (g.notes && g.notes.toLowerCase().includes(q))
+        (g.notes && g.notes.toLowerCase().includes(q)) ||
+        (g.children || []).some((c) => c.name.toLowerCase().includes(q))
     )
   }, [guests, search])
 
@@ -47,6 +54,17 @@ export default function GuestsPage() {
       await updateGuest(editingGuest.id, data)
     } else {
       await addGuest(data)
+    }
+  }
+
+  async function handleUpdateLikelihood(guestId: string, likelihood: Likelihood) {
+    await updateGuest(guestId, { likelihood })
+  }
+
+  async function handleDeleteSubgroup(subgroup: string) {
+    const affected = guests.filter((g) => g.subgroup === subgroup)
+    for (const g of affected) {
+      await updateGuest(g.id, { subgroup: 'other' })
     }
   }
 
@@ -112,7 +130,12 @@ export default function GuestsPage() {
             </p>
           )}
 
-          <GuestTable guests={filteredGuests} onEdit={handleEdit} onDelete={setDeletingGuest} />
+          <GuestTable
+            guests={filteredGuests}
+            onEdit={handleEdit}
+            onDelete={setDeletingGuest}
+            onUpdateLikelihood={handleUpdateLikelihood}
+          />
         </>
       ) : (
         <EmptyState
@@ -133,6 +156,8 @@ export default function GuestsPage() {
         onClose={handleCloseForm}
         onSubmit={handleSubmit}
         guest={editingGuest}
+        existingSubgroups={existingSubgroups}
+        onDeleteSubgroup={handleDeleteSubgroup}
       />
 
       <ConfirmDialog
