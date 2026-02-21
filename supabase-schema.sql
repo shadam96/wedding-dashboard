@@ -40,12 +40,31 @@ CREATE TABLE IF NOT EXISTS budget_items (
   created_at timestamptz DEFAULT now()
 );
 
+-- Venues table
+CREATE TABLE IF NOT EXISTS venues (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  location text,
+  min_price numeric DEFAULT 0,
+  max_price numeric DEFAULT 0,
+  capacity integer,
+  contact_name text,
+  contact_phone text,
+  status text NOT NULL DEFAULT 'considering'
+    CHECK (status IN ('considering', 'visited', 'booked', 'rejected')),
+  available_dates jsonb DEFAULT '[]'::jsonb,
+  notes text,
+  created_at timestamptz DEFAULT now()
+);
+
 -- Disable RLS on all tables (app uses middleware-level auth)
 ALTER TABLE guests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE budget_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE venues ENABLE ROW LEVEL SECURITY;
 
 -- Create permissive policies (allow all operations since auth is at middleware level)
 CREATE POLICY "Allow all on guests" ON guests FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all on tasks" ON tasks FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all on budget_items" ON budget_items FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all on venues" ON venues FOR ALL USING (true) WITH CHECK (true);

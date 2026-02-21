@@ -7,6 +7,7 @@ import {
   UserGroupIcon,
   ClipboardDocumentListIcon,
   BanknotesIcon,
+  MapPinIcon,
   Bars3Icon,
   XMarkIcon,
   HeartIcon,
@@ -20,6 +21,7 @@ const navItems = [
   { href: '/guests', label: 'מוזמנים', icon: UserGroupIcon },
   { href: '/tasks', label: 'משימות', icon: ClipboardDocumentListIcon },
   { href: '/budget', label: 'תקציב', icon: BanknotesIcon },
+  { href: '/venues', label: 'מקומות', icon: MapPinIcon },
 ]
 
 export default function Sidebar() {
