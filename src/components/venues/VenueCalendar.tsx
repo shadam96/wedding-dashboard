@@ -105,14 +105,17 @@ export default function VenueCalendar({ venues, onVenueClick }: VenueCalendarPro
                 {day}
               </span>
               {venuesOnDay.length > 0 && (
-                <div className="flex gap-0.5 flex-wrap justify-center">
+                <div className="flex gap-0.5 flex-wrap justify-center max-w-full">
                   {venuesOnDay.map(({ venueId, venueIndex }) => {
                     const color = getVenueColor(venueIndex)
                     return (
-                      <button
+                      <span
                         key={venueId}
+                        role="button"
+                        tabIndex={0}
                         onClick={() => onVenueClick(venueId)}
-                        className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${color.dot} hover:ring-2 hover:ring-offset-1 hover:ring-current transition`}
+                        onKeyDown={(e) => { if (e.key === 'Enter') onVenueClick(venueId) }}
+                        className={`inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 shrink-0 rounded-full ${color.dot} cursor-pointer hover:scale-125 transition-transform`}
                         title={venues.find((v) => v.id === venueId)?.name}
                       />
                     )
