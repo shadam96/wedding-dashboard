@@ -13,6 +13,12 @@ interface GuestTableProps {
   onUpdateLikelihood: (guestId: string, likelihood: Likelihood) => void
 }
 
+function headcount(list: Guest[]): number {
+  return list.reduce((sum, g) => {
+    return sum + 1 + (g.has_plus_one ? 1 : 0) + (g.children || []).length
+  }, 0)
+}
+
 export default function GuestTable({ guests, onEdit, onDelete, onUpdateLikelihood }: GuestTableProps) {
   const sides: GuestSide[] = ['suson', 'susonit']
   const [collapsedSides, setCollapsedSides] = useState<Set<GuestSide>>(new Set())
@@ -61,7 +67,7 @@ export default function GuestTable({ guests, onEdit, onDelete, onUpdateLikelihoo
               className="w-full px-4 py-3 bg-warm-50 dark:bg-warm-800 border-b border-warm-100 dark:border-warm-700 flex items-center justify-between hover:bg-warm-100/60 dark:hover:bg-warm-700/60 transition cursor-pointer"
             >
               <h3 className="font-bold text-warm-800 dark:text-warm-200">
-                {SIDE_LABELS[side]} ({sideGuests.length})
+                {SIDE_LABELS[side]} ({headcount(sideGuests)})
               </h3>
               <ChevronDownIcon
                 className={`w-4 h-4 text-warm-400 transition-transform ${sideCollapsed ? '-rotate-90' : ''}`}
@@ -82,14 +88,14 @@ export default function GuestTable({ guests, onEdit, onDelete, onUpdateLikelihoo
                       className="w-full px-4 py-2 bg-warm-50/50 dark:bg-warm-700/30 border-b border-warm-100 dark:border-warm-700 flex items-center justify-between hover:bg-warm-100/40 dark:hover:bg-warm-700/50 transition cursor-pointer"
                     >
                       <span className="text-xs font-medium text-warm-500 dark:text-warm-400">
-                        {getSubgroupLabel(subgroup)} ({groupGuests.length})
+                        {getSubgroupLabel(subgroup)} ({headcount(groupGuests)})
                       </span>
                       <ChevronDownIcon
                         className={`w-3.5 h-3.5 text-warm-300 dark:text-warm-500 transition-transform ${groupCollapsed ? '-rotate-90' : ''}`}
                       />
                     </button>
                     {!groupCollapsed && (
-                      <table className="w-full min-w-[600px]">
+                      <table className="w-full">
                         <tbody>
                           {groupGuests.map((guest) => (
                             <GuestRow
