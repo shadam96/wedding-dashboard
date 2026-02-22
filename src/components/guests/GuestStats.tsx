@@ -1,4 +1,4 @@
-import type { Guest } from '@/types'
+import { SIDE_LABELS, type Guest } from '@/types'
 
 interface GuestStatsProps {
   guests: Guest[]
@@ -41,8 +41,8 @@ export default function GuestStats({ guests }: GuestStatsProps) {
 
   const stats = [
     { label: 'סה"כ אנשים', value: totalHeadcount, sub: subParts[0] },
-    { label: 'סוסון', value: suson },
-    { label: 'סוסונית', value: susonit },
+    { label: SIDE_LABELS.suson, value: suson },
+    { label: SIDE_LABELS.susonit, value: susonit },
     { label: 'בטוח', value: green, dotColor: 'bg-emerald-400' },
     { label: 'אולי', value: yellow, dotColor: 'bg-amber-400' },
     { label: 'לא סביר', value: red, dotColor: 'bg-red-400' },

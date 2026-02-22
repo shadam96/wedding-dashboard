@@ -52,9 +52,11 @@ export interface BudgetItem {
 }
 
 // Hebrew label maps
+import { COUPLE_NAMES } from '@/lib/couple-names'
+
 export const SIDE_LABELS: Record<GuestSide, string> = {
-  suson: 'סוסון',
-  susonit: 'סוסונית',
+  suson: COUPLE_NAMES.suson,
+  susonit: COUPLE_NAMES.susonit,
 }
 
 export const SUBGROUP_LABELS: Record<string, string> = {
@@ -89,8 +91,8 @@ export const PRIORITY_LABELS: Record<TaskPriority, string> = {
 }
 
 export const OWNER_LABELS: Record<TaskOwner, string> = {
-  suson: 'סוסון',
-  susonit: 'סוסונית',
+  suson: COUPLE_NAMES.suson,
+  susonit: COUPLE_NAMES.susonit,
   both: 'שניהם',
 }
 
