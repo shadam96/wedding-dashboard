@@ -3,7 +3,9 @@
 import { useState } from 'react'
 import { PlusIcon, BanknotesIcon } from '@heroicons/react/24/outline'
 import { useBudget } from '@/hooks/useBudget'
-import type { BudgetItem } from '@/types'
+import { useGuests } from '@/hooks/useGuests'
+import { useAppSettings } from '@/hooks/useAppSettings'
+import type { BudgetItem, Guest } from '@/types'
 import PageHeader from '@/components/layout/PageHeader'
 import Button from '@/components/ui/Button'
 import EmptyState from '@/components/ui/EmptyState'
@@ -12,12 +14,36 @@ import BudgetSummary from '@/components/budget/BudgetSummary'
 import BudgetTable from '@/components/budget/BudgetTable'
 import BudgetFormModal from '@/components/budget/BudgetFormModal'
 
+function computeEstimatedGuests(guests: Guest[]): number {
+  let count = 0
+  for (const g of guests) {
+    if (g.likelihood === 'green') count += 1
+    else if (g.likelihood === 'yellow') count += 0.6
+
+    if (g.has_plus_one) {
+      const pLikelihood = g.plus_one_likelihood || g.likelihood
+      if (pLikelihood === 'green') count += 1
+      else if (pLikelihood === 'yellow') count += 0.6
+    }
+
+    for (const child of g.children) {
+      if (child.likelihood === 'green') count += 1
+      else if (child.likelihood === 'yellow') count += 0.6
+    }
+  }
+  return Math.round(count)
+}
+
 export default function BudgetPage() {
   const { items, loading, totalBudget, totalPaid, totalRemaining, addItem, updateItem, deleteItem } = useBudget()
+  const { guests, loading: guestsLoading } = useGuests()
+  const { value: budgetGoal, save: saveBudgetGoal } = useAppSettings<number>('budget_goal', 0)
   const [formOpen, setFormOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<BudgetItem | null>(null)
   const [deletingItem, setDeletingItem] = useState<BudgetItem | null>(null)
   const [deleteLoading, setDeleteLoading] = useState(false)
+
+  const estimatedGuests = computeEstimatedGuests(guests)
 
   function handleEdit(item: BudgetItem) {
     setEditingItem(item)
@@ -48,7 +74,7 @@ export default function BudgetPage() {
     }
   }
 
-  if (loading) {
+  if (loading || guestsLoading) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="w-8 h-8 border-4 border-rose-200 border-t-rose-500 rounded-full animate-spin" />
@@ -74,7 +100,9 @@ export default function BudgetPage() {
           <BudgetSummary
             totalBudget={totalBudget}
             totalPaid={totalPaid}
-            totalRemaining={totalRemaining}
+            budgetGoal={budgetGoal}
+            onBudgetGoalChange={saveBudgetGoal}
+            estimatedGuests={estimatedGuests}
           />
           <BudgetTable items={items} onEdit={handleEdit} onDelete={setDeletingItem} />
         </>

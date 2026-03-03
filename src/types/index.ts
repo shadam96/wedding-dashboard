@@ -140,6 +140,17 @@ export function getVenueColor(index: number) {
   return VENUE_COLORS[index % VENUE_COLORS.length]
 }
 
+export interface Bus {
+  id: string
+  label: string
+  location: string | null
+  provider_name: string | null
+  driver_phone: string | null
+  guest_in_charge: string | null
+  notes: string | null
+  created_at: string
+}
+
 // Venue spreadsheet types
 export interface SpreadsheetColumn {
   id: string

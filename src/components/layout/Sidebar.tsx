@@ -8,6 +8,7 @@ import {
   ClipboardDocumentListIcon,
   BanknotesIcon,
   MapPinIcon,
+  TruckIcon,
   Bars3Icon,
   XMarkIcon,
   HeartIcon,
@@ -22,6 +23,7 @@ const navItems = [
   { href: '/tasks', label: 'משימות', icon: ClipboardDocumentListIcon },
   { href: '/budget', label: 'תקציב', icon: BanknotesIcon },
   { href: '/venues', label: 'מקומות', icon: MapPinIcon },
+  { href: '/buses', label: 'הסעות', icon: TruckIcon },
 ]
 
 export default function Sidebar() {

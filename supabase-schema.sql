@@ -79,3 +79,17 @@ CREATE TABLE IF NOT EXISTS app_settings (
 );
 ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow all on app_settings" ON app_settings FOR ALL USING (true) WITH CHECK (true);
+
+-- Buses table
+CREATE TABLE IF NOT EXISTS buses (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  label text NOT NULL,
+  location text,
+  provider_name text,
+  driver_phone text,
+  guest_in_charge text,
+  notes text,
+  created_at timestamptz DEFAULT now()
+);
+ALTER TABLE buses ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow all on buses" ON buses FOR ALL USING (true) WITH CHECK (true);
