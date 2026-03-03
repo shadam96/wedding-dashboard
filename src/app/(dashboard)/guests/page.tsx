@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { PlusIcon, UserGroupIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useGuests } from '@/hooks/useGuests'
-import type { Guest, Likelihood } from '@/types'
+import type { Guest } from '@/types'
 import PageHeader from '@/components/layout/PageHeader'
 import Button from '@/components/ui/Button'
 import EmptyState from '@/components/ui/EmptyState'
@@ -57,8 +57,8 @@ export default function GuestsPage() {
     }
   }
 
-  async function handleUpdateLikelihood(guestId: string, likelihood: Likelihood) {
-    await updateGuest(guestId, { likelihood })
+  async function handleUpdateGuest(guestId: string, updates: Partial<Omit<Guest, 'id' | 'created_at'>>) {
+    await updateGuest(guestId, updates)
   }
 
   async function handleDeleteSubgroup(subgroup: string) {
@@ -134,7 +134,7 @@ export default function GuestsPage() {
             guests={filteredGuests}
             onEdit={handleEdit}
             onDelete={setDeletingGuest}
-            onUpdateLikelihood={handleUpdateLikelihood}
+            onUpdateGuest={handleUpdateGuest}
           />
         </>
       ) : (

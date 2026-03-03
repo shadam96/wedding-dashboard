@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS guests (
   has_plus_one boolean DEFAULT false,
   plus_one_name text,
   plus_one_likelihood text DEFAULT 'green' CHECK (plus_one_likelihood IN ('red', 'yellow', 'green')),
+  will_dance boolean DEFAULT false,
+  plus_one_will_dance boolean DEFAULT false,
   children jsonb DEFAULT '[]'::jsonb,
   phone text,
   notes text,

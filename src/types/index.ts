@@ -9,6 +9,7 @@ export interface GuestChild {
   name: string
   under_10: boolean
   likelihood: Likelihood
+  will_dance: boolean
 }
 
 export interface Guest {
@@ -17,9 +18,11 @@ export interface Guest {
   side: GuestSide
   subgroup: GuestSubgroup
   likelihood: Likelihood
+  will_dance: boolean
   has_plus_one: boolean
   plus_one_name: string | null
   plus_one_likelihood: Likelihood | null
+  plus_one_will_dance: boolean
   children: GuestChild[]
   phone: string | null
   notes: string | null

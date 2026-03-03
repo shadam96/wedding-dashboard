@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import type { Guest, GuestSide, Likelihood } from '@/types'
+import type { Guest, GuestSide } from '@/types'
 import { SIDE_LABELS, DEFAULT_SUBGROUPS, getSubgroupLabel } from '@/types'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import GuestRow from './GuestRow'
@@ -10,7 +10,7 @@ interface GuestTableProps {
   guests: Guest[]
   onEdit: (guest: Guest) => void
   onDelete: (guest: Guest) => void
-  onUpdateLikelihood: (guestId: string, likelihood: Likelihood) => void
+  onUpdateGuest: (guestId: string, updates: Partial<Omit<Guest, 'id' | 'created_at'>>) => void
 }
 
 function headcount(list: Guest[]): number {
@@ -19,7 +19,7 @@ function headcount(list: Guest[]): number {
   }, 0)
 }
 
-export default function GuestTable({ guests, onEdit, onDelete, onUpdateLikelihood }: GuestTableProps) {
+export default function GuestTable({ guests, onEdit, onDelete, onUpdateGuest }: GuestTableProps) {
   const sides: GuestSide[] = ['suson', 'susonit']
   const [collapsedSides, setCollapsedSides] = useState<Set<GuestSide>>(new Set())
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set())
@@ -103,7 +103,7 @@ export default function GuestTable({ guests, onEdit, onDelete, onUpdateLikelihoo
                               guest={guest}
                               onEdit={onEdit}
                               onDelete={onDelete}
-                              onUpdateLikelihood={onUpdateLikelihood}
+                              onUpdateGuest={onUpdateGuest}
                             />
                           ))}
                         </tbody>

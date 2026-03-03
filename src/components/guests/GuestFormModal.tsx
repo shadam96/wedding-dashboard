@@ -26,9 +26,11 @@ const emptyForm = {
   side: 'suson' as GuestSide,
   subgroup: 'family' as string,
   likelihood: 'green' as Likelihood,
+  will_dance: false,
   has_plus_one: false,
   plus_one_name: '',
   plus_one_likelihood: 'green' as Likelihood,
+  plus_one_will_dance: false,
   children: [] as GuestChild[],
   phone: '',
   notes: '',
@@ -49,10 +51,12 @@ export default function GuestFormModal({ open, onClose, onSubmit, guest, existin
         side: guest.side,
         subgroup: isCustom ? guest.subgroup : guest.subgroup,
         likelihood: guest.likelihood,
+        will_dance: guest.will_dance ?? false,
         has_plus_one: guest.has_plus_one,
         plus_one_name: guest.plus_one_name || '',
         plus_one_likelihood: guest.plus_one_likelihood || 'green',
-        children: guest.children || [],
+        plus_one_will_dance: guest.plus_one_will_dance ?? false,
+        children: (guest.children || []).map((c) => ({ ...c, will_dance: c.will_dance ?? false })),
         phone: guest.phone || '',
         notes: guest.notes || '',
       })
@@ -78,6 +82,7 @@ export default function GuestFormModal({ open, onClose, onSubmit, guest, existin
         subgroup: finalSubgroup || 'other',
         plus_one_name: form.plus_one_name || null,
         plus_one_likelihood: form.has_plus_one ? form.plus_one_likelihood : null,
+        plus_one_will_dance: form.has_plus_one ? form.plus_one_will_dance : false,
         children: filteredChildren,
         phone: form.phone || null,
         notes: form.notes || null,
@@ -131,7 +136,7 @@ export default function GuestFormModal({ open, onClose, onSubmit, guest, existin
   function addChild() {
     setForm({
       ...form,
-      children: [...form.children, { name: '', under_10: false, likelihood: 'green' }],
+      children: [...form.children, { name: '', under_10: false, likelihood: 'green', will_dance: false }],
     })
   }
 
@@ -222,13 +227,24 @@ export default function GuestFormModal({ open, onClose, onSubmit, guest, existin
           </div>
         </div>
 
-        <Select
-          id="guest-likelihood"
-          label="סבירות הגעה"
-          options={likelihoodOptions}
-          value={form.likelihood}
-          onChange={(e) => setForm({ ...form, likelihood: e.target.value as Likelihood })}
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+          <Select
+            id="guest-likelihood"
+            label="סבירות הגעה"
+            options={likelihoodOptions}
+            value={form.likelihood}
+            onChange={(e) => setForm({ ...form, likelihood: e.target.value as Likelihood })}
+          />
+          <label className="flex items-center gap-2 cursor-pointer pb-2">
+            <input
+              type="checkbox"
+              checked={form.will_dance}
+              onChange={(e) => setForm({ ...form, will_dance: e.target.checked })}
+              className="w-4 h-4 rounded border-warm-300 dark:border-warm-600 text-rose-500 focus:ring-rose-300 dark:focus:ring-rose-500 dark:bg-warm-700"
+            />
+            <span className="text-sm text-warm-700 dark:text-warm-300">רוקד/ת</span>
+          </label>
+        </div>
 
         {/* Plus-one section */}
         <div className="flex items-center gap-3">
@@ -244,20 +260,31 @@ export default function GuestFormModal({ open, onClose, onSubmit, guest, existin
         </div>
 
         {form.has_plus_one && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Input
-              id="guest-plus-one"
-              label="שם הפלוס אחד"
-              value={form.plus_one_name}
-              onChange={(e) => setForm({ ...form, plus_one_name: e.target.value })}
-            />
-            <Select
-              id="guest-plus-one-likelihood"
-              label="סבירות הגעה (פלוס)"
-              options={likelihoodOptions}
-              value={form.plus_one_likelihood}
-              onChange={(e) => setForm({ ...form, plus_one_likelihood: e.target.value as Likelihood })}
-            />
+          <div className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Input
+                id="guest-plus-one"
+                label="שם הפלוס אחד"
+                value={form.plus_one_name}
+                onChange={(e) => setForm({ ...form, plus_one_name: e.target.value })}
+              />
+              <Select
+                id="guest-plus-one-likelihood"
+                label="סבירות הגעה (פלוס)"
+                options={likelihoodOptions}
+                value={form.plus_one_likelihood}
+                onChange={(e) => setForm({ ...form, plus_one_likelihood: e.target.value as Likelihood })}
+              />
+            </div>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.plus_one_will_dance}
+                onChange={(e) => setForm({ ...form, plus_one_will_dance: e.target.checked })}
+                className="w-4 h-4 rounded border-warm-300 dark:border-warm-600 text-rose-500 focus:ring-rose-300 dark:focus:ring-rose-500 dark:bg-warm-700"
+              />
+              <span className="text-sm text-warm-700 dark:text-warm-300">רוקד/ת (פלוס)</span>
+            </label>
           </div>
         )}
 
@@ -294,6 +321,15 @@ export default function GuestFormModal({ open, onClose, onSubmit, guest, existin
                           className="w-4 h-4 rounded border-warm-300 dark:border-warm-600 text-rose-500 focus:ring-rose-300 dark:focus:ring-rose-500 dark:bg-warm-700"
                         />
                         <span className="text-xs text-warm-600 dark:text-warm-400">מתחת ל-10</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={child.will_dance}
+                          onChange={(e) => updateChild(i, { will_dance: e.target.checked })}
+                          className="w-4 h-4 rounded border-warm-300 dark:border-warm-600 text-rose-500 focus:ring-rose-300 dark:focus:ring-rose-500 dark:bg-warm-700"
+                        />
+                        <span className="text-xs text-warm-600 dark:text-warm-400">רוקד/ת</span>
                       </label>
                       <Select
                         id={`child-likelihood-${i}`}

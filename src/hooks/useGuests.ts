@@ -20,7 +20,12 @@ export function useGuests() {
     if (err) {
       setError(err.message)
     } else {
-      setGuests((data || []).map((g) => ({ ...g, children: g.children || [] })))
+      setGuests((data || []).map((g) => ({
+        ...g,
+        will_dance: g.will_dance ?? false,
+        plus_one_will_dance: g.plus_one_will_dance ?? false,
+        children: (g.children || []).map((c: Record<string, unknown>) => ({ ...c, will_dance: c.will_dance ?? false })),
+      })))
     }
     setLoading(false)
   }, [])

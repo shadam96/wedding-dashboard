@@ -36,6 +36,16 @@ export default function GuestStats({ guests }: GuestStatsProps) {
 
   const under10 = allChildren.filter((c) => c.under_10).length
 
+  // Count dancers
+  let dancers = 0
+  for (const g of guests) {
+    if (g.will_dance) dancers++
+    if (g.has_plus_one && g.plus_one_will_dance) dancers++
+    for (const c of g.children || []) {
+      if (c.will_dance) dancers++
+    }
+  }
+
   const subParts = [`${total} מוזמנים + ${plusOnes} פלוסים`]
   if (childrenCount > 0) subParts[0] += ` + ${childrenCount} ילדים`
 
@@ -46,6 +56,7 @@ export default function GuestStats({ guests }: GuestStatsProps) {
     { label: 'בטוח', value: green, dotColor: 'bg-emerald-400' },
     { label: 'אולי', value: yellow, dotColor: 'bg-amber-400' },
     { label: 'לא סביר', value: red, dotColor: 'bg-red-400' },
+    { label: 'רוקדים', value: dancers, dotColor: 'bg-pink-400' },
   ]
 
   if (under10 > 0) {
