@@ -1,6 +1,6 @@
 'use client'
 
-import type { Guest, Likelihood, GuestChild } from '@/types'
+import type { Guest, GuestChild } from '@/types'
 import { getSubgroupLabel } from '@/types'
 import LikelihoodPicker from './LikelihoodPicker'
 import { PencilIcon, TrashIcon, UserPlusIcon } from '@heroicons/react/24/outline'
@@ -10,19 +10,6 @@ interface GuestRowProps {
   onEdit: (guest: Guest) => void
   onDelete: (guest: Guest) => void
   onUpdateGuest: (guestId: string, updates: Partial<Omit<Guest, 'id' | 'created_at'>>) => void
-}
-
-function DanceCheck({ checked, onChange, title }: { checked: boolean; onChange: (v: boolean) => void; title?: string }) {
-  return (
-    <label className="cursor-pointer flex items-center" title={title || 'רוקד/ת'}>
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="w-3 h-3 rounded border-warm-300 dark:border-warm-600 text-rose-500 focus:ring-rose-300 dark:focus:ring-rose-500 dark:bg-warm-700 cursor-pointer"
-      />
-    </label>
-  )
 }
 
 export default function GuestRow({ guest, onEdit, onDelete, onUpdateGuest }: GuestRowProps) {
@@ -36,16 +23,10 @@ export default function GuestRow({ guest, onEdit, onDelete, onUpdateGuest }: Gue
   return (
     <tr className="border-b border-warm-100 dark:border-warm-700 hover:bg-warm-50/50 dark:hover:bg-warm-700/30 transition">
       <td className="py-3 ps-3 pe-1 sm:ps-4 sm:pe-2">
-        <div className="flex items-center gap-1">
-          <LikelihoodPicker
-            current={guest.likelihood}
-            onChange={(v) => onUpdateGuest(guest.id, { likelihood: v })}
-          />
-          <DanceCheck
-            checked={guest.will_dance}
-            onChange={(v) => onUpdateGuest(guest.id, { will_dance: v })}
-          />
-        </div>
+        <LikelihoodPicker
+          current={guest.likelihood}
+          onChange={(v) => onUpdateGuest(guest.id, { likelihood: v })}
+        />
       </td>
       <td className="py-3 px-1 sm:px-2">
         <div className="font-medium text-warm-900 dark:text-warm-100 text-sm sm:text-base">{guest.name}</div>
@@ -62,10 +43,6 @@ export default function GuestRow({ guest, onEdit, onDelete, onUpdateGuest }: Gue
                 current={guest.plus_one_likelihood || guest.likelihood}
                 onChange={(v) => onUpdateGuest(guest.id, { plus_one_likelihood: v })}
               />
-              <DanceCheck
-                checked={guest.plus_one_will_dance}
-                onChange={(v) => onUpdateGuest(guest.id, { plus_one_will_dance: v })}
-              />
             </span>
           )}
           {children.length > 0 && (
@@ -76,11 +53,6 @@ export default function GuestRow({ guest, onEdit, onDelete, onUpdateGuest }: Gue
                   <LikelihoodPicker
                     current={c.likelihood}
                     onChange={(v) => updateChildField(i, { likelihood: v })}
-                  />
-                  <DanceCheck
-                    checked={c.will_dance}
-                    onChange={(v) => updateChildField(i, { will_dance: v })}
-                    title={`${c.name} - רוקד/ת`}
                   />
                 </span>
               ))}
@@ -104,10 +76,6 @@ export default function GuestRow({ guest, onEdit, onDelete, onUpdateGuest }: Gue
               current={guest.plus_one_likelihood || guest.likelihood}
               onChange={(v) => onUpdateGuest(guest.id, { plus_one_likelihood: v })}
             />
-            <DanceCheck
-              checked={guest.plus_one_will_dance}
-              onChange={(v) => onUpdateGuest(guest.id, { plus_one_will_dance: v })}
-            />
           </span>
         )}
         {children.length > 0 && (
@@ -119,11 +87,6 @@ export default function GuestRow({ guest, onEdit, onDelete, onUpdateGuest }: Gue
                   <LikelihoodPicker
                     current={c.likelihood}
                     onChange={(v) => updateChildField(i, { likelihood: v })}
-                  />
-                  <DanceCheck
-                    checked={c.will_dance}
-                    onChange={(v) => updateChildField(i, { will_dance: v })}
-                    title={`${c.name} - רוקד/ת`}
                   />
                 </span>
               ))}

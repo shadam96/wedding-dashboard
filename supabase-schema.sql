@@ -70,3 +70,12 @@ CREATE POLICY "Allow all on guests" ON guests FOR ALL USING (true) WITH CHECK (t
 CREATE POLICY "Allow all on tasks" ON tasks FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all on budget_items" ON budget_items FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all on venues" ON venues FOR ALL USING (true) WITH CHECK (true);
+
+-- App settings table (key-value store for UI settings like blocked dates, spreadsheet data)
+CREATE TABLE IF NOT EXISTS app_settings (
+  key text PRIMARY KEY,
+  value jsonb DEFAULT '{}'::jsonb,
+  updated_at timestamptz DEFAULT now()
+);
+ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow all on app_settings" ON app_settings FOR ALL USING (true) WITH CHECK (true);

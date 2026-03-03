@@ -140,6 +140,22 @@ export function getVenueColor(index: number) {
   return VENUE_COLORS[index % VENUE_COLORS.length]
 }
 
+// Venue spreadsheet types
+export interface SpreadsheetColumn {
+  id: string
+  name: string
+}
+
+export interface SpreadsheetRow {
+  id: string
+  cells: Record<string, string>
+}
+
+export interface SpreadsheetData {
+  columns: SpreadsheetColumn[]
+  rows: SpreadsheetRow[]
+}
+
 export const BUDGET_CATEGORIES = [
   'אולם',
   'קייטרינג',

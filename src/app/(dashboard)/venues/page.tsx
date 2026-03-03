@@ -11,6 +11,7 @@ import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import VenueCalendar from '@/components/venues/VenueCalendar'
 import VenueCardList from '@/components/venues/VenueCardList'
 import VenueFormModal from '@/components/venues/VenueFormModal'
+import VenueSpreadsheet from '@/components/venues/VenueSpreadsheet'
 
 export default function VenuesPage() {
   const { venues, loading, addVenue, updateVenue, deleteVenue } = useVenues()
@@ -79,11 +80,10 @@ export default function VenuesPage() {
         }
       />
 
+      <VenueCalendar venues={venues} onVenueClick={handleVenueClick} />
+
       {venues.length > 0 ? (
-        <>
-          <VenueCalendar venues={venues} onVenueClick={handleVenueClick} />
-          <VenueCardList venues={venues} onEdit={handleEdit} onDelete={setDeletingVenue} />
-        </>
+        <VenueCardList venues={venues} onEdit={handleEdit} onDelete={setDeletingVenue} />
       ) : (
         <EmptyState
           icon={<MapPinIcon className="w-12 h-12" />}
@@ -97,6 +97,8 @@ export default function VenuesPage() {
           }
         />
       )}
+
+      <VenueSpreadsheet />
 
       <VenueFormModal
         open={formOpen}
