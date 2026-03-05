@@ -1,5 +1,5 @@
--- Wedding Dashboard - Supabase Schema
--- Run this in your Supabase SQL Editor
+-- Wedding Dashboard - Database Schema
+-- Tables are auto-created on first request; this file is for reference only.
 
 -- Guests table
 CREATE TABLE IF NOT EXISTS guests (
@@ -59,26 +59,12 @@ CREATE TABLE IF NOT EXISTS venues (
   created_at timestamptz DEFAULT now()
 );
 
--- Disable RLS on all tables (app uses middleware-level auth)
-ALTER TABLE guests ENABLE ROW LEVEL SECURITY;
-ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
-ALTER TABLE budget_items ENABLE ROW LEVEL SECURITY;
-ALTER TABLE venues ENABLE ROW LEVEL SECURITY;
-
--- Create permissive policies (allow all operations since auth is at middleware level)
-CREATE POLICY "Allow all on guests" ON guests FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all on tasks" ON tasks FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all on budget_items" ON budget_items FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow all on venues" ON venues FOR ALL USING (true) WITH CHECK (true);
-
 -- App settings table (key-value store for UI settings like blocked dates, spreadsheet data)
 CREATE TABLE IF NOT EXISTS app_settings (
   key text PRIMARY KEY,
   value jsonb DEFAULT '{}'::jsonb,
   updated_at timestamptz DEFAULT now()
 );
-ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow all on app_settings" ON app_settings FOR ALL USING (true) WITH CHECK (true);
 
 -- Buses table
 CREATE TABLE IF NOT EXISTS buses (
@@ -91,5 +77,3 @@ CREATE TABLE IF NOT EXISTS buses (
   notes text,
   created_at timestamptz DEFAULT now()
 );
-ALTER TABLE buses ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow all on buses" ON buses FOR ALL USING (true) WITH CHECK (true);

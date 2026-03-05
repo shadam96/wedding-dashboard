@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase/client'
 import type { Guest, Task, BudgetItem } from '@/types'
 
 interface DashboardData {
@@ -20,14 +19,14 @@ export function useDashboard(): DashboardData {
   useEffect(() => {
     async function fetchAll() {
       const [guestsRes, tasksRes, budgetRes] = await Promise.all([
-        supabase.from('guests').select('*'),
-        supabase.from('tasks').select('*').order('due_date', { ascending: true }),
-        supabase.from('budget_items').select('*'),
+        fetch('/api/guests').then((r) => r.json()),
+        fetch('/api/tasks').then((r) => r.json()),
+        fetch('/api/budget').then((r) => r.json()),
       ])
 
-      setGuests(guestsRes.data || [])
-      setTasks(tasksRes.data || [])
-      setBudgetItems(budgetRes.data || [])
+      setGuests(guestsRes || [])
+      setTasks(tasksRes || [])
+      setBudgetItems(budgetRes || [])
       setLoading(false)
     }
 

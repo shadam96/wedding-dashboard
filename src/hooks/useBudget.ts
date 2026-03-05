@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '@/lib/supabase/client'
 import type { BudgetItem } from '@/types'
 
 export function useBudget() {
@@ -12,15 +11,13 @@ export function useBudget() {
   const fetchItems = useCallback(async () => {
     setLoading(true)
     setError(null)
-    const { data, error: err } = await supabase
-      .from('budget_items')
-      .select('*')
-      .order('created_at', { ascending: true })
-
-    if (err) {
-      setError(err.message)
-    } else {
-      setItems(data || [])
+    try {
+      const res = await fetch('/api/budget')
+      if (!res.ok) throw new Error(await res.text())
+      const data: BudgetItem[] = await res.json()
+      setItems(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch budget items')
     }
     setLoading(false)
   }, [])
@@ -30,33 +27,32 @@ export function useBudget() {
   }, [fetchItems])
 
   async function addItem(item: Omit<BudgetItem, 'id' | 'created_at'>) {
-    const { data, error: err } = await supabase
-      .from('budget_items')
-      .insert(item)
-      .select()
-      .single()
-
-    if (err) throw err
+    const res = await fetch('/api/budget', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(item),
+    })
+    if (!res.ok) throw new Error(await res.text())
+    const data: BudgetItem = await res.json()
     setItems((prev) => [...prev, data])
     return data
   }
 
   async function updateItem(id: string, updates: Partial<Omit<BudgetItem, 'id' | 'created_at'>>) {
-    const { data, error: err } = await supabase
-      .from('budget_items')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single()
-
-    if (err) throw err
+    const res = await fetch(`/api/budget/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    })
+    if (!res.ok) throw new Error(await res.text())
+    const data: BudgetItem = await res.json()
     setItems((prev) => prev.map((i) => (i.id === id ? data : i)))
     return data
   }
 
   async function deleteItem(id: string) {
-    const { error: err } = await supabase.from('budget_items').delete().eq('id', id)
-    if (err) throw err
+    const res = await fetch(`/api/budget/${id}`, { method: 'DELETE' })
+    if (!res.ok) throw new Error(await res.text())
     setItems((prev) => prev.filter((i) => i.id !== id))
   }
 

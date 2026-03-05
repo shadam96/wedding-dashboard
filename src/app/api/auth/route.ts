@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getAuthToken } from '@/lib/auth-token'
 
 export async function POST(request: NextRequest) {
   const { password } = await request.json()
 
   if (password === process.env.APP_PASSWORD) {
+    const authToken = getAuthToken()
+    if (!authToken) {
+      return NextResponse.json({ error: 'Server misconfigured — APP_PASSWORD not set' }, { status: 500 })
+    }
     const response = NextResponse.json({ success: true })
-    response.cookies.set('wedding_auth', process.env.AUTH_TOKEN!, {
+    response.cookies.set('wedding_auth', authToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { supabase } from '@/lib/supabase/client'
 
 export function useAppSettings<T>(key: string, defaultValue: T) {
   const [value, setValue] = useState<T>(defaultValue)
@@ -12,17 +11,15 @@ export function useAppSettings<T>(key: string, defaultValue: T) {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      const { data } = await supabase
-        .from('app_settings')
-        .select('value')
-        .eq('key', key)
-        .maybeSingle()
-
-      if (!cancelled) {
-        if (data?.value !== undefined && data.value !== null) {
+      try {
+        const res = await fetch(`/api/settings?key=${encodeURIComponent(key)}`)
+        if (!res.ok) return
+        const data = await res.json()
+        if (!cancelled && data.value !== undefined && data.value !== null) {
           setValue(data.value as T)
         }
-        setLoading(false)
+      } finally {
+        if (!cancelled) setLoading(false)
       }
     }
     load()
@@ -31,9 +28,11 @@ export function useAppSettings<T>(key: string, defaultValue: T) {
 
   const save = useCallback(async (newValue: T) => {
     setValue(newValue)
-    await supabase
-      .from('app_settings')
-      .upsert({ key, value: newValue as unknown as Record<string, unknown>, updated_at: new Date().toISOString() })
+    await fetch('/api/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key, value: newValue }),
+    })
   }, [key])
 
   return { value, setValue, save, loading }

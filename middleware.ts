@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getAuthToken } from '@/lib/auth-token'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -13,9 +14,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  const authToken = getAuthToken()
   const token = request.cookies.get('wedding_auth')?.value
 
-  if (token !== process.env.AUTH_TOKEN) {
+  if (!authToken || token !== authToken) {
     const loginUrl = new URL('/login', request.url)
     return NextResponse.redirect(loginUrl)
   }

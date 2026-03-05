@@ -15,7 +15,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
-    "@supabase/supabase-js": "^2.95.3",
+    "@neondatabase/serverless": "^1.0.2",
     "@types/node": "^25.2.3",
     "@types/react": "^19.2.14",
     "next": "^16.1.6",

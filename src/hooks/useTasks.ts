@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '@/lib/supabase/client'
 import type { Task } from '@/types'
 
 export function useTasks() {
@@ -12,15 +11,13 @@ export function useTasks() {
   const fetchTasks = useCallback(async () => {
     setLoading(true)
     setError(null)
-    const { data, error: err } = await supabase
-      .from('tasks')
-      .select('*')
-      .order('created_at', { ascending: true })
-
-    if (err) {
-      setError(err.message)
-    } else {
-      setTasks(data || [])
+    try {
+      const res = await fetch('/api/tasks')
+      if (!res.ok) throw new Error(await res.text())
+      const data: Task[] = await res.json()
+      setTasks(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch tasks')
     }
     setLoading(false)
   }, [])
@@ -30,33 +27,32 @@ export function useTasks() {
   }, [fetchTasks])
 
   async function addTask(task: Omit<Task, 'id' | 'created_at'>) {
-    const { data, error: err } = await supabase
-      .from('tasks')
-      .insert(task)
-      .select()
-      .single()
-
-    if (err) throw err
+    const res = await fetch('/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(task),
+    })
+    if (!res.ok) throw new Error(await res.text())
+    const data: Task = await res.json()
     setTasks((prev) => [...prev, data])
     return data
   }
 
   async function updateTask(id: string, updates: Partial<Omit<Task, 'id' | 'created_at'>>) {
-    const { data, error: err } = await supabase
-      .from('tasks')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single()
-
-    if (err) throw err
+    const res = await fetch(`/api/tasks/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    })
+    if (!res.ok) throw new Error(await res.text())
+    const data: Task = await res.json()
     setTasks((prev) => prev.map((t) => (t.id === id ? data : t)))
     return data
   }
 
   async function deleteTask(id: string) {
-    const { error: err } = await supabase.from('tasks').delete().eq('id', id)
-    if (err) throw err
+    const res = await fetch(`/api/tasks/${id}`, { method: 'DELETE' })
+    if (!res.ok) throw new Error(await res.text())
     setTasks((prev) => prev.filter((t) => t.id !== id))
   }
 

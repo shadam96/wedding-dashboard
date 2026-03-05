@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '@/lib/supabase/client'
 import type { Venue } from '@/types'
 
 export function useVenues() {
@@ -12,20 +11,18 @@ export function useVenues() {
   const fetchVenues = useCallback(async () => {
     setLoading(true)
     setError(null)
-    const { data, error: err } = await supabase
-      .from('venues')
-      .select('*')
-      .order('created_at', { ascending: true })
-
-    if (err) {
-      setError(err.message)
-    } else {
+    try {
+      const res = await fetch('/api/venues')
+      if (!res.ok) throw new Error(await res.text())
+      const data = await res.json()
       setVenues(
         (data || []).map((v: Record<string, unknown>) => ({
           ...v,
           available_dates: (v.available_dates as string[]) || [],
         })) as Venue[]
       )
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch venues')
     }
     setLoading(false)
   }, [])
@@ -35,35 +32,34 @@ export function useVenues() {
   }, [fetchVenues])
 
   async function addVenue(venue: Omit<Venue, 'id' | 'created_at'>) {
-    const { data, error: err } = await supabase
-      .from('venues')
-      .insert(venue)
-      .select()
-      .single()
-
-    if (err) throw err
+    const res = await fetch('/api/venues', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(venue),
+    })
+    if (!res.ok) throw new Error(await res.text())
+    const data = await res.json()
     const newVenue = { ...data, available_dates: data.available_dates || [] } as Venue
     setVenues((prev) => [...prev, newVenue])
     return newVenue
   }
 
   async function updateVenue(id: string, updates: Partial<Omit<Venue, 'id' | 'created_at'>>) {
-    const { data, error: err } = await supabase
-      .from('venues')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single()
-
-    if (err) throw err
+    const res = await fetch(`/api/venues/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    })
+    if (!res.ok) throw new Error(await res.text())
+    const data = await res.json()
     const updated = { ...data, available_dates: data.available_dates || [] } as Venue
     setVenues((prev) => prev.map((v) => (v.id === id ? updated : v)))
     return updated
   }
 
   async function deleteVenue(id: string) {
-    const { error: err } = await supabase.from('venues').delete().eq('id', id)
-    if (err) throw err
+    const res = await fetch(`/api/venues/${id}`, { method: 'DELETE' })
+    if (!res.ok) throw new Error(await res.text())
     setVenues((prev) => prev.filter((v) => v.id !== id))
   }
 
